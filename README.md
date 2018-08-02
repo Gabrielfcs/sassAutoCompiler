@@ -1,5 +1,4 @@
-# Sass Auto Compiler
-![Magazord](assets/img/logo-magazord-sass-auto-compiler.png)
+![Magazord Sass Auto Compiler logo](assets/img/logo-magazord-sass-auto-compiler.png)
 
 Isto é pequeno guia de utilização do auto compiler, que utiliza do interpretador de código JavaScript "Node.js" para automatizar as funções do sistema.
 
