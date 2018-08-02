@@ -31,4 +31,12 @@ $ nodemon compiler
 
 ## BOM TRABALHO!! O Sass Auto Compiler ja esta funcionando!
 
+## Referências
+
+Este compilador foi baseado nos seguintes conteúdos:
+- [Node.js](https://nodejs.org/en/)
+- [Express](http://expressjs.com/pt-br/)
+- [jQuery](https://jquery.com/)
+- [Sass](https://sass-lang.com/)
+- [Nodemon](https://nodemon.io/)
 
