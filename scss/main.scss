@@ -1,0 +1,257 @@
+$color-base: #36304a;
+$color-secondary: rgba(54,48,74,0.2);
+$color-terciary: #4b4463;
+
+* {
+    margin: 0;
+    padding: 0;
+    left: 0;
+    font-size: 16px;
+}
+
+::selection { background: $color-base; color: #fff;}
+    ::-moz-selection { background: $color-base; color: #fff;}
+
+h1 {
+    font-size: 3em;
+    color: #211d2f;
+    text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.09);
+}
+
+header {
+    padding: 50px 0 0 0;
+}
+
+body {
+    font-family: 'Open Sans';
+    color: #fff;
+    background: $color-base;
+}
+
+footer {
+    position: relative;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 120px 0 0 0;
+    text-align: center;
+}
+
+div.content {
+    max-width: 1240px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%;}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+
+table {
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    margin: 0 0 100px 0;
+    
+    thead {
+        background: $color-terciary;
+        
+        tr {
+            height: 60px;
+            background: $color-terciary;
+            
+            th {
+                font-family: OpenSans-Regular;
+                font-size: 18px;
+                color: #fff;
+                line-height: 1.2;
+                font-weight: unset;
+            }
+        }
+    } 
+    
+    tbody{
+        background: #fff;
+        
+        tr {
+            height: 50px;
+            font-family: OpenSans-Regular;
+            font-size: 15px;
+            color: $color-base;
+            background: #fff;
+            line-height: 1.2;
+            font-weight: unset;
+            
+            &:nth-child(even) {
+                background-color: $color-secondary;
+            }
+            
+            td {
+                text-align: center;
+                color: $color-base;
+            }
+        }
+    } 
+}
+
+#filtros {
+    padding: 50px 0 0 0;
+    display: block;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 50px;
+
+    .conteudo {
+        .search-box {
+            height: 35px;
+            background: transparent;
+            border: 0;
+            border-bottom: 1px solid #4b4463;
+            color: #fff;
+            outline: none;
+
+            &::placeholder {
+                color: #fff;
+            }
+        }
+        
+        .buttons {
+            float: right;
+        }
+
+        .btn-base {
+            margin: 0 10px;
+            padding: 10px 0;
+            width: 120px;
+            border: 0;
+            color: #fff;
+            background: #706695;
+            outline: none;
+            border-radius: 3px;
+            border-bottom: 3px solid #4b4463;
+            font-family: 'Open Sans';
+            
+            &.compiler {
+                background: #26A65B;
+                border-color: #1c6d3e;
+                float: right;
+                font-weight: bold;
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            &:active {
+                border-bottom: 0;
+                transform: translateY(3px);
+            }
+        }
+    }
+}
+
+/*
+* SWITCH BUTTON
+*/
+.toggle-button {
+    display: flex;
+    align-items: center;
+    float: left;
+    padding: 5px 20px;
+    
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+        margin-right: 10px;
+    }
+    
+    /* Hide default HTML checkbox */
+    .switch input {display:none;}
+    
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #211d2f;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: #4b4463;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    
+    .slider:after {
+        position: absolute;
+        content: "";
+        height: 39px;
+        width: 38px;
+        top: -2px;
+        margin: 0;
+        padding: 0;
+        left: -2px;
+        background: url(../images/right-mark.svg) no-repeat center center;
+        background-size: contain;
+        -webkit-transition: .4s;
+        transition: .4s;
+        opacity: 0;
+    }
+    
+    input:checked + .slider {
+        // background-color: #2196F3;
+    }
+    
+    input:focus + .slider {
+        // box-shadow: 0 0 1px #2196F3;
+    }
+    
+    input:checked + .slider:before, 
+    input:checked + .slider:after {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+    
+    input:checked + .slider:after {
+        transition-delay: 3s;
+        transition: opacity 2s;
+        opacity: 0.5;
+    }
+    
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+    
+    .slider.round:before {
+        border-radius: 50%;
+    }
+}
