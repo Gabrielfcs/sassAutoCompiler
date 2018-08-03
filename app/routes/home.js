@@ -6,84 +6,122 @@ var sass = require('node-sass');
 
 const cTable = require('console.table');
 
-const webTable = require('./../../table');
+const buildWebTable = require('./../../table');
 const color = require('./../../colors');
+const arrayFilter = require('./../../arrayFilter');
 
 const directory = "D:/htdocs";
-var tabela = Array([]);
+var webTable = Array([]);
 var trlines = '';
+var consoleTable = [];
+var str_table = '';
+var aAllWebFolders = [];
+var folderCarac =  [];
+var folderPath =  [];
+var folderName =  [];
+
 
 module.exports = function(app){
     app.get('/', function(req, res){
-
-        var table = [];
-        var consoleTable = [];
-        var str_table = '';
-        
         fs.readdir( directory, function( err, files ) {
             if( err ) {
                 console.error( "Could not list the directory.", err );
                 process.exit( 1 );
             } 
             
-            files.forEach( function(file, index) {
-                //gets the entire directory
-                var fullpath = path.join( directory, file );            
+            files.forEach( function(folder, index) {
+                //gets the entire path
+                var fullpath = path.join( directory, folder );
                 
-                //adds spaces to the index
-                showIndex = index < 10 ? " "+ index : index;
-                showIndex = " "+showIndex;
+                //iterates all folders initiated by "web"
+                fs.readdir(fullpath, function( err, webFiles ) {
+                    aWebFolders = [];
+                    folderPath = [];
+                    folderName = [];
+                    webFiles.forEach( function(webfolder, webFolderIndex) {
+                        //gets the entire path of web folder
+                        var fullpathweb = path.join( fullpath, webfolder );         
+                        if(webfolder.indexOf('web-') > -1){
+                            if(fullpathweb != null){
+                                // console.log(index+'-t: '+fullpathweb);
+                                folderPath.push(fullpathweb);
+                            }
+                            if(webfolder != null){
+                                folderName.push(webfolder);
+                            }
+                        }
+                    });
+                    arrayFilter.clean(folderPath,undefined);
+                    arrayFilter.clean(folderName,undefined);
+                    folderCarac[0] = folderName;
+                    folderCarac[1] = folderPath;
 
-                //adds the correct values to the table of page
-                tabela[index] = {
-                    indice: showIndex,
-                    arquivo: file,
-                    diretorio: fullpath
-                };
-
-                //Creates the table to show on console
-                consoleTable[index] = {
-                    'indice': color.colorize(showIndex+": ", color.GREEN),
-                    'arquivo': color.colorize(file, color.YELLOW),
-                    'diretorio': color.colorize(" ("+fullpath+")", color.MAGENTA)
-                };
+                    if(folderCarac != null && folderCarac != undefined){
+                        aAllWebFolders[index] = folderCarac;
+                    }
+                    
+                    //adds the correct values to the table of page
+                    webTable[index] = {
+                        indice: index,
+                        arquivo: folder,
+                        diretorio: fullpath,
+                        webfoldername: aAllWebFolders[index][0],
+                        webfolderpath: aAllWebFolders[index][1]
+                    };
+                    
+                    //Creates the table to show on console
+                    consoleTable[index] = {
+                        'indice': color.colorize(index+": ", color.GREEN),
+                        'arquivo': color.colorize(folder, color.YELLOW),
+                        'diretorio': color.colorize(" ("+fullpath+")", color.MAGENTA),
+                        'webFolders': color.colorize(" ("+aAllWebFolders[index][0]+")", color.CYAN)
+                        // 'webFolders': color.colorize(" ("+aAllWebFolders[index][1]+")", color.CYAN) //gets all of web folders path
+                    };
+                });
             } );
             
             //Clears the console
             console.clear();
             //Shows the title of the table on console
-            console.log("\n\nList of files:\n");
+            console.log("\nList of files:\n");
             //Shows the table on console
             console.table(consoleTable);
         } );
 
         //Creates the lines of the table
         trlines = '';
-        for (let i = 0; i < tabela.length; i++) {
-            trlines +=  webTable.getTr(
-                            webTable.getTd(`<input type="checkbox" name="${i}" value="${tabela[i].diretorio}">`, `class="col-1"`)+
-                            webTable.getTd(`${tabela[i].indice}`, `class="col-1"`)+
-                            webTable.getTd(`${tabela[i].arquivo}`, `class="col-5"`)+
-                            webTable.getTd(`${tabela[i].diretorio}`, `class="col-5"`)
-                        );            
+        if (webTable.length > 0) {
+            for (let i = 0; i < webTable.length; i++) {
+                if(webTable[i].arquivo != 'sprint' && webTable[i].arquivo != 'trunk'){
+                    trlines +=  buildWebTable.getTr(
+                                    buildWebTable.getTd(`<input type="checkbox" name="${i}" value="${webTable[i].webfolderpath}">`, `class="col-1"`)+
+                                    buildWebTable.getTd(`${webTable[i].indice}`, `class="col-1"`)+
+                                    buildWebTable.getTd(`${webTable[i].arquivo}`, `class="col-3"`)+
+                                    buildWebTable.getTd(`${webTable[i].diretorio}`, `class="col-3"`)+
+                                    buildWebTable.getTd(`${webTable[i].webfoldername}`, `class="col-3"`)
+                                );            
+                }
+            }
         }
 
         //sets the table variable
-        str_table = webTable.getTable(
+        str_table = buildWebTable.getTable(
             //Creates the header of the table
-            webTable.getTHead(
-                webTable.getTr(
-                    webTable.getTh(`<input id="checkAll" type="checkbox" name="checkall" value="checkall">`)+
-                    webTable.getTh('indice')+
-                    webTable.getTh('Nome do arquivo')+
-                    webTable.getTh('Diretório')
+            buildWebTable.getTHead(
+                buildWebTable.getTr(
+                    buildWebTable.getTh(`<input id="checkAll" type="checkbox" name="checkall" value="checkall">`)+
+                    buildWebTable.getTh('Indice')+
+                    buildWebTable.getTh('Nome do arquivo')+
+                    buildWebTable.getTh('Diretório')+
+                    buildWebTable.getTh('Web Folders')
                 )
             )+
             //adds the previously created body
-            webTable.getTBody(trlines)
+            buildWebTable.getTBody(trlines)
         );
 
         //sets the variable of the table to another variable to fix the content
+        console.log(trlines);
         pre_save = str_table;
         //defines the encoding
         res.charset = 'UTF-8';

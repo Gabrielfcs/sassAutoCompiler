@@ -17,21 +17,12 @@ app.post('/index/clicked', (req, res) => {
     
     var json = req.body;
     for(i in json) {
-        // consoleCommand.execute('pushd '+json[i]);
-        // consoleCommand.execute('pushd '+json[i]+' && echo %cd%');
+        var array = json[i].split(',');
 
-        consoleCommand.execute('pushd '+json[i]+' && compass compile');
-
-        // strcommand = 'pushd '+json[i];
+        array.forEach(function (element, index) {
+            consoleCommand.execute('pushd '+element+' && compass compile');
+        });
     }
-    
-
-    // console.log(id);
-
-    // console.log("WORKIIIIING BIIIIIIIRL!!!"+req);
-    // console.log("WORKIIIIING BIIIIIIIRL!!!"+id);
-
-    // res.send('working');
 });
 
 module.exports = app;
