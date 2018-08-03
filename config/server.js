@@ -18,9 +18,13 @@ app.post('/index/clicked', (req, res) => {
     var json = req.body;
     for(i in json) {
         var array = json[i].split(',');
-
         array.forEach(function (element, index) {
-            consoleCommand.execute('pushd '+element+' && compass compile');
+            // consoleCommand.execute('echo executing on: '+element);
+            consoleCommand.execute('(echo execute: '+element+') && (pushd '+element+') && compass compile && echo passed!: '+element+')');
+            // consoleCommand.execute('start cmd.exe /K "((pushd '+element+') && compass clean && compass compile && exit 0 ) || exit 1 "');
+            // consoleCommand.execute('pushd '+element+' && compass compile');
+
+            //(pushd D:\htdocs\sprint-extremeuv\web-extreme-uv) && ( compass clean && compass compile && exit ) ||  
         });
     }
 });
