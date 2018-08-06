@@ -155,46 +155,45 @@
                         headers: {"Content-Type": "application/json"}
                       })
                     .then(function(response) {
-                        if(response.ok) {
+                        if(response.ok) {        
                             response.json().then(function(data) {
-                                trace = data.text;
+                                if(data.text.length > 0) {
+                                    swal({
+                                        title: "Alerta!",
+                                        text: "Foram encontrados os erros!",
+                                        icon: "warning",
+                                        buttons: {
+                                            catch: {
+                                                text: "Log de erros",
+                                                value: "trace",
+                                            },
+                                            cancel: "Ignorar"
+                                        },
+                                    }).then((value) => {
+                                        switch (value) {                         
+                                          case "trace":
+                                            swal("Log de erros: "+data.text);
+                                            break;
+                                       
+                                          default:
+                                            swal({
+                                                title: "Okay!",
+                                                icon: "/images/sad-face.svg",
+                                                className: "sad-face",
+                                                text: "Mas lembre-se de que os erros não foram corrigidos!",
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    swal({
+                                        title: "Muito bem!",
+                                        text: "Todos os arquivos foram compilados sem erros!",
+                                        icon: "success",
+                                        button: "Ok",
+                                    });
+                                }
                             });
 
-                            if(!trace) {
-                                swal({
-                                    title: "Pronto!",
-                                    text: "A requisição foi enviada!",
-                                    icon: "success",
-                                    button: "Ok",
-                                });
-                            } else {
-                                swal({
-                                    title: "Alerta!",
-                                    text: "Foram encontrados os erros!",
-                                    icon: "warning",
-                                    buttons: {
-                                        catch: {
-                                            text: "Log de erros",
-                                            value: "trace",
-                                        },
-                                        cancel: "Ignorar"
-                                    },
-                                }).then((value) => {
-                                    switch (value) {                         
-                                      case "trace":
-                                        swal("Log de erros: "+trace);
-                                        break;
-                                   
-                                      default:
-                                        swal({
-                                            title: "Okay!",
-                                            icon: "/images/sad-face.svg",
-                                            className: "sad-face",
-                                            text: "Mas lembre-se de que os erros não foram corrigidos!",
-                                        });
-                                    }
-                                });
-                            }
                             return;
                         } else {
                             //swal("Alerta!", "Foram encontrados os erros a seguir:"+error, "warning");

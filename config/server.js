@@ -18,28 +18,27 @@ app.post('/index/clicked', (req, res) => {
     
     var json = req.body;
     global.strError = '';
-    var b = new consoleCommand();
+    var cCommandInstance = new consoleCommand();
 
     for(i in json) {
         var array = json[i].split(',');
         array.forEach(function (element, index) {
-
-
-            b.execCommand('(echo execute: '+element+') && (pushd '+element+') && compass compile && echo passed!: '+element+')', function(e){
-                console.log("afterall: "+e);
+            last = index == array.length - 1 ? true : false; 
+            cCommandInstance.execCommand('(echo execute: '+element+') && (pushd '+element+') && compass compile && echo passed!: '+element+')', function(returnedValue){
+                // console.log("allerrors: "+returnedValue);
+                if (last) {
+                    res.set('Content-Type', 'application/json');
+                    res.send(200, {
+                        text: returnedValue
+                    });
+                }
             });
-            // if(last && consoleOut.length > 0) {
-            //     res.send(200, {
-            //         text: strError
-            //     });
-            // }
             // consoleCommand.execute('start cmd.exe /K "((pushd '+element+') && compass clean && compass compile && exit 0 ) || exit 1 "');
             // consoleCommand.execute('pushd '+element+' && compass compile');
-
+            
             //(pushd D:\htdocs\sprint-extremeuv\web-extreme-uv) && ( compass clean && compass compile && exit ) ||  
         });
     }
-    // console.log("afterall: "+b);
 });
 
 module.exports = app;
