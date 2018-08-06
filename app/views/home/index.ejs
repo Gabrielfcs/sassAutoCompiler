@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/js/sweetalert.min.js"></script>
 </head>
 <body>
     <div class="content">
@@ -155,13 +156,66 @@
                       })
                     .then(function(response) {
                         if(response.ok) {
-                            console.log('click was recorded');
+                            response.json().then(function(data) {
+                                trace = data.text;
+                            });
+
+                            if(!trace) {
+                                swal({
+                                    title: "Pronto!",
+                                    text: "A requisição foi enviada!",
+                                    icon: "success",
+                                    button: "Ok",
+                                });
+                            } else {
+                                swal({
+                                    title: "Alerta!",
+                                    text: "Foram encontrados os erros!",
+                                    icon: "warning",
+                                    buttons: {
+                                        catch: {
+                                            text: "Log de erros",
+                                            value: "trace",
+                                        },
+                                        cancel: "Ignorar"
+                                    },
+                                }).then((value) => {
+                                    switch (value) {                         
+                                      case "trace":
+                                        swal("Log de erros: "+trace);
+                                        break;
+                                   
+                                      default:
+                                        swal({
+                                            title: "Okay!",
+                                            icon: "/images/sad-face.svg",
+                                            className: "sad-face",
+                                            text: "Mas lembre-se de que os erros não foram corrigidos!",
+                                        });
+                                    }
+                                });
+                            }
                             return;
+                        } else {
+                            //swal("Alerta!", "Foram encontrados os erros a seguir:"+error, "warning");
+                            swal({
+                                title: "O servidor não respondeu!",
+                                text: "Tente novamente mais tarde!",
+                                icon: "error",
+                                buttons: false,
+                            });
                         }
-                        throw new Error('Request failed.');
                     })
                     .catch(function(error) {
-                        console.log(error);
+                        //swal("O servidor não respondeu!", "Tente novamente mais tarde!", "error");
+                        swal({
+                            title: "Ocorreu um erro!",
+                            text: error,
+                            icon: "error",
+                            buttons: {
+                                cancel: "sair"
+                            },
+                        });
                     });
                     
                 });

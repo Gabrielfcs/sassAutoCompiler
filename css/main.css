@@ -1,7 +1,6 @@
 * {
   margin: 0;
   padding: 0;
-  left: 0;
   font-size: 16px; }
 
 ::selection {
@@ -215,3 +214,10 @@ table {
     border-radius: 34px; }
   .toggle-button .slider.round:before {
     border-radius: 50%; }
+
+.sad-face .swal-icon {
+  margin: 0;
+  margin-top: 32px; }
+  .sad-face .swal-icon img {
+    width: 100px;
+    height: 100px; }

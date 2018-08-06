@@ -5,7 +5,6 @@ $color-terciary: #4b4463;
 * {
     margin: 0;
     padding: 0;
-    left: 0;
     font-size: 16px;
 }
 
@@ -252,5 +251,17 @@ table {
     
     .slider.round:before {
         border-radius: 50%;
+    }
+}
+
+.sad-face {
+    .swal-icon{
+        margin: 0;
+        margin-top: 32px;
+
+        img {
+            width: 100px;
+            height: 100px;
+        }
     }
 }
