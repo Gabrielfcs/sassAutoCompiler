@@ -34,7 +34,7 @@ app.post('/index/clicked', (req, res) => {
     for(i in json) {
         var array = json[i].split(',');
         array.forEach(function (element, index) {
-            cCommandInstance.execCommand('(echo execute: '+element+') && (pushd '+element+') && compass compile && echo passed!: '+element+')', function(returnedValue){
+            cCommandInstance.execCommand('(echo execute: '+element+') && (pushd '+element+') && ( compass clean && compass compile ) && echo passed!: '+element+')', function(returnedValue){
                 last = index == array.length - 1 ? true : false; 
                 if (last) {
                     console.log("allerrors: "+returnedValue);
