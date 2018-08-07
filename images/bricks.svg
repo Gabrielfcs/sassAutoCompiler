@@ -1,0 +1,69 @@
+<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75 500" preserveAspectRatio="xMidYMid" class="lds-bricks">
+    <style>
+        svg rect {
+            transform: scale(2);
+        }
+        svg rect:nth-child(2) {
+            animation-name: bounce;
+            animation-delay: 1s;
+            transform: translateX(100px);
+            animation-duration: 5s;
+            animation-iteration-count: infinite;
+            opacity: 0;
+        }
+
+        svg rect:nth-child(3) {
+            animation-name: bounce;
+            animation-delay: 2s;
+            transform: translateX(100px);
+            animation-duration: 5s;
+            animation-iteration-count: infinite;
+            opacity: 0;
+        }
+
+        svg rect:nth-child(4) {
+            animation-name: bounce;
+            animation-delay: 4s;
+            transform: translateX(100px);
+            animation-duration: 5s;
+            animation-iteration-count: infinite;
+            opacity: 0;
+        }
+
+        svg rect:nth-child(5) {
+            animation-name: bounce;
+            animation-delay: 3s;
+            transform: translateX(100px);
+            animation-duration: 5s;
+            animation-iteration-count: infinite;
+            opacity: 0;
+        }
+
+        @keyframes bounce {
+              0% { opacity: 0; transform: translateX(100px) scale(2); }
+             20% {  opacity: 1;transform: translateX(0px) scale(2); }
+             60% { opacity: 1;}
+            100% { opacity: 0; transform: translateX(0px) scale(2);  }
+        }
+    </style>
+    <rect ng-attr-fill="{{config.c1}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#36304a" x="15" y="55" width="30" height="30" rx="3" ry="3"></rect>
+    <rect ng-attr-fill="{{config.c3}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#36304a" x="15" y="15" width="30" height="30" rx="3" ry="3"></rect>
+    <rect ng-attr-fill="{{config.c2}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#36304a" x="55" y="15" width="30" height="30" rx="3" ry="3"></rect>
+    <rect ng-attr-fill="{{config.c2}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#36304a" x="55" y="55" width="30" height="30" rx="3" ry="3"></rect>
+    
+    <rect ng-attr-fill="{{config.c3}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#211d2f" x="-65" y="15" width="30" height="30" rx="3" ry="3">    </rect>
+    <rect ng-attr-fill="{{config.c3}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#211d2f" x="-65" y="55" width="30" height="30" rx="3" ry="3"></rect>
+    <rect ng-attr-fill="{{config.c3}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#211d2f" x="-65" y="95" width="30" height="30" rx="3" ry="3"></rect>
+    <rect ng-attr-fill="{{config.c3}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#211d2f" x="-65" y="135" width="30" height="30" rx="3" ry="3"></rect>
+
+    <rect ng-attr-fill="{{config.c3}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#211d2f" x="-25" y="15" width="30" height="30" rx="3" ry="3"></rect>
+    <rect ng-attr-fill="{{config.c3}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#211d2f" x="-25" y="55" width="30" height="30" rx="3" ry="3"></rect>
+    <rect ng-attr-fill="{{config.c3}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#211d2f" x="-25" y="95" width="30" height="30" rx="3" ry="3"></rect>
+    <rect ng-attr-fill="{{config.c3}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#211d2f" x="-25" y="135" width="30" height="30" rx="3" ry="3"></rect>
+
+    <rect ng-attr-fill="{{config.c2}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#211d2f" x="15" y="95" width="30" height="30" rx="3" ry="3"></rect>
+    <rect ng-attr-fill="{{config.c2}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#211d2f" x="15" y="135" width="30" height="30" rx="3" ry="3"></rect> 
+
+    <rect ng-attr-fill="{{config.c2}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#211d2f" x="55" y="95" width="30" height="30" rx="3" ry="3"></rect>
+    <rect ng-attr-fill="{{config.c2}}" ng-attr-x="{{config.x}}" ng-attr-y="{{config.x}}" ng-attr-width="{{config.w}}" ng-attr-height="{{config.w}}" ng-attr-rx="{{config.radius}}" ng-attr-ry="{{config.radius}}" fill="#211d2f" x="55" y="135" width="30" height="30" rx="3" ry="3"></rect>
+</svg>

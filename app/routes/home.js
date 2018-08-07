@@ -11,7 +11,7 @@ const color = require('./../../colors');
 const arrayFilter = require('./../../arrayFilter');
 
 const directory = "D:/htdocs";
-var webTable = Array([]);
+var webTable = [];
 var trlines = '';
 var consoleTable = [];
 var str_table = '';

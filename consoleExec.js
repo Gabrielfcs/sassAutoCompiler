@@ -9,18 +9,13 @@ module.exports = function(){
             if (error) {
                 global.strError += error;
                 console.error(color.colorize(`${error}`, color.RED));   
-                return;
             } else {
-                console.log(stderr);
-                // if(execprocess.code == 1) {
-                //     console.log(execprocess.code);
-                // }
+                console.log(`${stdout}`);
+                if(stderr.length > 0){
+                    console.log(`${stderr}`);
+                }
             }
             
-            console.log(`${stdout}`);
-            if(stderr.length > 0){
-                console.log(`${stderr}`);
-            }
             // console.log("beforereturn: "+execprocess.stdout);
             // return `${strError}`;
             callback(global.strError); //return value

@@ -10,6 +10,11 @@
     <script src="/js/sweetalert.min.js"></script>
 </head>
 <body>
+    <div id="full-bg">
+        <div id="load-screen">
+            <img src="/images/bricks.svg" alt="carregando" height="100" width="100">
+        </div>
+    </div>
     <div class="content">
         <header>
             <h1 style="display:block;text-align:center;">Welcome to Auto Compiler!</h1>
@@ -49,6 +54,7 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
+                $('#full-bg').hide();
                 str = $('#table').text();
                 html = $.parseHTML(str);
                 $('#table').html(html);
@@ -142,6 +148,7 @@
                 var json = '';
                 
                 $('#btn-compile').click(function (){
+                    $('#full-bg').show();
                     json = '';
                     $('input[type="checkbox"]:checked').not('.checkbox-switch').not('#checkAll').each(function(index, value){
                         comma = index != $('input[type="checkbox"]:checked').not('.checkbox-switch').not('#checkAll').length -1 ? ',' : '';
@@ -151,10 +158,11 @@
 
                     fetch('/index/clicked', {
                         method: 'POST',
-                        body: json,
-                        headers: {"Content-Type": "application/json"}
+                        headers: {"Content-Type": "application/json"},
+                        body: json
                       })
                     .then(function(response) {
+                        $('#full-bg').hide();
                         if(response.ok) {        
                             response.json().then(function(data) {
                                 if(data.text.length > 0) {
@@ -172,7 +180,15 @@
                                     }).then((value) => {
                                         switch (value) {                         
                                           case "trace":
-                                            swal("Log de erros: "+data.text);
+                                            swal({
+                                                title: "Log de erros: ",
+                                                text: data.text,
+                                                icon: "warning",
+                                                className: "popup-trace",
+                                                buttons: {
+                                                    cancel: "Fechar"
+                                                }
+                                            });
                                             break;
                                        
                                           default:
