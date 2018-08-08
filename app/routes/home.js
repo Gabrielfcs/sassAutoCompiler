@@ -20,6 +20,9 @@ var folderCarac =  [];
 var folderPath =  [];
 var folderName =  [];
 
+global.strConsoleTable;
+global.strConsoleTable = '';
+
 
 module.exports = function(app){
     app.get('/', function(req, res){
@@ -79,6 +82,8 @@ module.exports = function(app){
                     };
                 });
             } );
+
+            global.strConsoleTable = consoleTable;
             
             //Clears the console
             console.clear();

@@ -16,10 +16,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.post('/index/clicked', (req, res) => {
+    console.clear();
+    console.table(global.strConsoleTable);
+
     var json = req.body;
     global.strError = '';
     var cCommandInstance = new consoleCommand();
-
     var date = new Date();
     
     var current_day = date.getDate();
@@ -30,32 +32,39 @@ app.post('/index/clicked', (req, res) => {
     var current_minute = date.getMinutes();
     var current_second = date.getSeconds();
     var formated_date = "("+current_day+"-"+current_month+"-"+current_year+" "+current_hour+"-"+current_minute+"-"+current_second+")";
-    
-    for(i in json) {
-        var array = json[i].split(',');
-        array.forEach(function (element, index) {
-            cCommandInstance.execCommand('(echo execute: '+element+') && (pushd '+element+') && ( compass clean && compass compile ) && echo passed!: '+element+')', function(returnedValue){
-                last = index == array.length - 1 ? true : false; 
-                if (last) {
-                    console.log("allerrors: "+returnedValue);
-                    fs.writeFile('./logs/error-log'+formated_date+'.txt', returnedValue, {flag: "w"}, function (err) {
-                        if (err){
-                            console.log(err);
-                        }
-                        // console.log("It's saved!");
-                    });
-                    res.status(200);
-                    res.end(JSON.stringify({
-                        text: returnedValue
-                    }));
-                }
-            });
-            // consoleCommand.execute('start cmd.exe /K "((pushd '+element+') && compass clean && compass compile && exit 0 ) || exit 1 "');
-            // consoleCommand.execute('pushd '+element+' && compass compile');
-            
-            //(pushd D:\htdocs\sprint-extremeuv\web-extreme-uv) && ( compass clean && compass compile && exit ) ||  
-        });
+
+    var str = '';
+    for(i in json){
+        if(typeof json[i] == "object"){
+            newArray = json[i];
+            for(j in newArray){
+                str += str.length > 0 ? ','+newArray[j] : newArray[j];
+            }
+        } else {
+            str += str.length > 0 ? ','+json[i] : json[i];
+        }
     }
+    
+    var array = str.split(',');
+    array.forEach(function (element, index) {
+        last = index == array.length - 1 ? true : false;
+        consoleRequest = cCommandInstance.execCommand('(pushd '+element+') && compass compile && exit : echo executed!', index, element);
+
+        consoleRequest.then((cResponse) => {
+            if ((array.length-1) == cResponse.currentIndex) {
+                fs.writeFile('./logs/error-log'+formated_date+'.txt', cResponse.error, {flag: "w"}, function (err) {
+                    if (err){
+                        console.log(err);
+                    }
+                    // console.log("saved!");
+                });
+                res.status(200);
+                res.end(JSON.stringify({
+                    text: cResponse.error
+                }));
+            }
+        });
+    });
 });
 
 module.exports = app;
