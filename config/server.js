@@ -48,14 +48,18 @@ app.post('/index/clicked', (req, res) => {
         }
     }
     
-    var array = str.split(',');
-    array.forEach(function (element, index) {
-        last = index == array.length - 1 ? true : false;
+    var foldersArray = str.split(',');
+    console.log(foldersArray);
+    var currentFolderIndex = -1;
+    foldersArray.forEach(function (element, index) {
         compassClean = needToClear ? 'compass clean &&' : '';
-        consoleRequest = cCommandInstance.execCommand('(pushd '+element+') && '+compassClean+' compass compile && exit : echo executed!', index, element);
+        if(currentFolderIndex+1 == index){
+            consoleRequest = cCommandInstance.execCommand('(pushd '+element+') && '+compassClean+' compass compile && exit : echo executed!', index, element);
+        }
 
         consoleRequest.then((cResponse) => {
-            if ((array.length-1) == cResponse.currentIndex) {
+            currentFolderIndex = cResponse.currentIndex;
+            if ((foldersArray.length-1) == cResponse.currentIndex) {
                 fs.writeFile('./logs/error-log'+formated_date+'.txt', cResponse.error, {flag: "w"}, function (err) {
                     if (err){
                         console.log(err);

@@ -9,7 +9,7 @@ module.exports = function(){
             exec(strcommand,{maxBuffer: 1024 * 500}, (error, stdout, stderr) => {
                 if (error) {
                     console.log('Executed: '+color.colorize(directory, color.CYAN)+' and '+color.colorize('failed', color.RED)+'!');
-                    global.strError += error;
+                    global.strError += '|redcolor|'+error+'|/redcolor| |purplecolor| Output: |/purplecolor|'+stdout;
                     // console.error(color.colorize(`${error}`, color.RED));
                     resolve({
                         currentIndex: indexToReturn, 

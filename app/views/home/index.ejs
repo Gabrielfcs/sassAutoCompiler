@@ -174,7 +174,7 @@
                                 if(data.text.length > 0) {
                                     swal({
                                         title: "Alerta!",
-                                        text: "Foram encontrados os erros!",
+                                        text: "Foram encontrados alguns erros!",
                                         icon: "warning",
                                         buttons: {
                                             catch: {
@@ -187,14 +187,21 @@
                                         switch (value) {                         
                                           case "trace":
                                             swal({
-                                                title: "Log de erros: ",
-                                                text: data.text,
-                                                icon: "warning",
-                                                className: "popup-trace",
-                                                buttons: {
-                                                    cancel: "Fechar"
+                                              title: "Log de erros: ",
+                                              text: data.text,
+                                              icon: "warning",
+                                              className: "popup-trace",
+                                              buttons: {
+                                                  cancel: "Fechar"
                                                 }
                                             });
+                                            str = $('.popup-trace .swal-text').text();
+                                            traceText = str.split('|redcolor|').join('<span style="color: #f00">');
+                                            traceText = traceText.split('|/redcolor|').join('</span>');
+                                            traceText = traceText.split('|purplecolor|').join('<span style="font-weight: bold; color: #36304a">');
+                                            traceText = traceText.split('|/purplecolor|').join('</span>');
+                                            traceText = $.parseHTML(traceText);
+                                            $('.popup-trace .swal-text').html(traceText);
                                             break;
                                        
                                           default:
