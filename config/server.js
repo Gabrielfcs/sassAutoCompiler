@@ -19,7 +19,10 @@ app.post('/index/clicked', (req, res) => {
     console.clear();
     console.table(global.strConsoleTable);
 
-    var json = req.body;
+    var bodyRequest = req.body;
+    var json = bodyRequest.strJson;
+    var needToClear = bodyRequest.needtoclear;
+
     global.strError = '';
     var cCommandInstance = new consoleCommand();
     var date = new Date();
@@ -48,7 +51,8 @@ app.post('/index/clicked', (req, res) => {
     var array = str.split(',');
     array.forEach(function (element, index) {
         last = index == array.length - 1 ? true : false;
-        consoleRequest = cCommandInstance.execCommand('(pushd '+element+') && compass compile && exit : echo executed!', index, element);
+        compassClean = needToClear ? 'compass clean &&' : '';
+        consoleRequest = cCommandInstance.execCommand('(pushd '+element+') && '+compassClean+' compass compile && exit : echo executed!', index, element);
 
         consoleRequest.then((cResponse) => {
             if ((array.length-1) == cResponse.currentIndex) {

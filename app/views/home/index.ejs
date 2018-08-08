@@ -21,7 +21,7 @@
         </header>
         
         <div id="filtros">
-            <div class="conteudo">
+            <div class="conteudo full">
                 <div id="btn-sprint" class="toggle-button col-2">
                     <label class="switch">
                         <input class="checkbox-switch" type="checkbox" checked>
@@ -36,15 +36,15 @@
                     </label>
                     <span class="text">Trunk</span>
                 </div>
-                <!-- <div id="btn-clear" class="toggle-button col-2">
+                <div id="btn-clear" class="toggle-button col-2">
                     <label class="switch">
                         <input class="checkbox-switch" type="checkbox" checked>
                         <span class="slider round"></span>
                     </label>
                     <span class="text">Limpar</span>
-                </div> -->
-                <input type="text" class="search-box col-3" placeholder="Pesquisar..">
-                <div class="buttons col-3">
+                </div>
+                <input type="text" class="search-box col-5" placeholder="Pesquisar..">
+                <div class="buttons col-2">
                     <!-- <input type="submit" class="btn-base" value="Filtrar"> -->
                     <input id="btn-compile" type="submit" class="btn-base compiler" value="Compilar!">
                 </div>
@@ -161,8 +161,7 @@
                         comma = index != $('input[type="checkbox"]:checked').not('.checkbox-switch').not('#checkAll').length -1 ? ',' : '';
                         json += ' "'+index+'": "'+$(this).val().split('\\').join('\\\\')+'" '+comma;
                     });
-                    json = '{'+json+'}';
-
+                    json = '{"strJson": {'+json+'}, "needtoclear": '+$('#btn-clear input[type="checkbox"]').is(':checked')+'}';
                     fetch('/index/clicked', {
                         method: 'POST',
                         headers: {"Content-Type": "application/json"},
