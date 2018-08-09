@@ -8,6 +8,7 @@
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "jquery": "^3.3.1",
+    "jquery-circle-progress": "^1.2.2",
     "node-sass": "^4.9.2",
     "nodemon": "^1.18.3",
     "sweetalert": "^2.1.0"

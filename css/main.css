@@ -256,3 +256,31 @@ table {
   max-height: 110px;
   overflow-y: scroll;
   overflow-x: hidden; }
+
+/*
+ * Progress Bar
+ */
+#loader {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.93); }
+  #loader .circle {
+    width: 200px;
+    margin: 6px 20px 20px;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    vertical-align: top; }
+    #loader .circle strong {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      line-height: 38px;
+      font-size: 29px; }

@@ -15,16 +15,30 @@ app.use('/images', express.static('images'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+global.foldersArray;
+global.foldersArray = Array();
+global.formatedDate;
+global.formatedDate = '';
+global.progressCircleValue;
+global.progressCircleValue = 0;
+var cCommandInstance = new consoleCommand();
+
+app.post('/index/getProgressValue', (req, res) => {
+    res.end(JSON.stringify({
+        value: global.progressCircleValue
+    }));
+});
+
 app.post('/index/clicked', (req, res) => {
     console.clear();
     console.table(global.strConsoleTable);
+    global.progressCircleValue = 0;
 
     var bodyRequest = req.body;
     var json = bodyRequest.strJson;
     var needToClear = bodyRequest.needtoclear;
 
     global.strError = '';
-    var cCommandInstance = new consoleCommand();
     var date = new Date();
     
     var current_day = date.getDate();
@@ -34,7 +48,7 @@ app.post('/index/clicked', (req, res) => {
     var current_hour = date.getHours();
     var current_minute = date.getMinutes();
     var current_second = date.getSeconds();
-    var formated_date = "("+current_day+"-"+current_month+"-"+current_year+" "+current_hour+"-"+current_minute+"-"+current_second+")";
+    global.formatedDate = "("+current_day+"-"+current_month+"-"+current_year+" "+current_hour+"-"+current_minute+"-"+current_second+")";
 
     var str = '';
     for(i in json){
@@ -48,30 +62,36 @@ app.post('/index/clicked', (req, res) => {
         }
     }
     
-    var foldersArray = str.split(',');
-    console.log(foldersArray);
-    var currentFolderIndex = -1;
-    foldersArray.forEach(function (element, index) {
-        compassClean = needToClear ? 'compass clean &&' : '';
-        if(currentFolderIndex+1 == index){
+    global.foldersArray = str.split(',');
+    compilation = new Promise((compilationResolve, compilationReject) => { 
+        compilation =  compile(0); 
+        function compile(indexOfExecution) {
+            element = global.foldersArray[indexOfExecution];
+            index = indexOfExecution;
+            compassClean = needToClear ? 'compass clean &&' : '';
             consoleRequest = cCommandInstance.execCommand('(pushd '+element+') && '+compassClean+' compass compile && exit : echo executed!', index, element);
+            consoleRequest.then((cResponse) => {
+                if(cResponse.currentIndex < global.foldersArray.length -1 ){
+                    global.progressCircleValue = (((100/(global.foldersArray.length))*(cResponse.currentIndex+1)))/100;
+                    console.log(global.progressCircleValue);
+                    compile(cResponse.currentIndex + 1);
+                } else {
+                    fs.writeFile('./logs/error-log'+global.formatedDate+'.txt', cResponse.error, {flag: "w"}, function (err) {
+                        if (err){
+                            console.log(err);
+                        }
+                        // console.log("saved!");
+                    });
+                    compilationResolve(cResponse.error);
+                }
+            });
         }
-
-        consoleRequest.then((cResponse) => {
-            currentFolderIndex = cResponse.currentIndex;
-            if ((foldersArray.length-1) == cResponse.currentIndex) {
-                fs.writeFile('./logs/error-log'+formated_date+'.txt', cResponse.error, {flag: "w"}, function (err) {
-                    if (err){
-                        console.log(err);
-                    }
-                    // console.log("saved!");
-                });
-                res.status(200);
-                res.end(JSON.stringify({
-                    text: cResponse.error
-                }));
-            }
-        });
+    });
+    compilation.then((compilationResponse) =>{
+        res.status(200);
+        res.end(JSON.stringify({
+            text: compilationResponse
+        }));
     });
 });
 

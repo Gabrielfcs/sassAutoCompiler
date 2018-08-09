@@ -7,12 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/js/circle-progress.js"></script>
     <script src="/js/sweetalert.min.js"></script>
 </head>
 <body>
-    <div id="full-bg">
+    <!-- <div id="full-bg">
         <div id="load-screen">
             <img src="/images/bricks.svg" alt="carregando" height="100" width="100">
+        </div>
+    </div> -->
+    <div id="loader">
+        <div class="circle" id="circle-a">
+            <strong></strong>
         </div>
     </div>
     <div class="content">
@@ -61,10 +67,24 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
-                $('#full-bg').hide();
+                //$('#full-bg').hide();
+                $('#loader').hide();
                 str = $('#table').text();
                 html = $.parseHTML(str);
                 $('#table').html(html);
+                var progressBarOptions = {
+                    startAngle: -1.55,
+                    size: 100,
+                    animationStartValue: 0,
+                    value: 0,
+                    fill: {
+                        //color: '#36304a'
+                        gradient: ["#211d2f", "#65598c"]
+                    }
+                }
+                $('.circle').circleProgress(progressBarOptions).on('circle-animation-progress', function(event, progress, stepValue) {
+                    $(this).find('strong').text(String((stepValue*100).toFixed(0))+'%');
+                });
 
                 $("#checkAll").click(function(){
                     $('input:checkbox').not('.checkbox-switch').each(function(index, value) {
@@ -153,22 +173,52 @@
 
                 var aDirecotories = [];
                 var json = '';
+                var currentProgressValue = 0;
                 
+                function refreshProgress(){
+                    setTimeout(function(){
+                        fetch('/index/getProgressValue', {
+                            method: 'POST',
+                            headers: {"Content-Type": "application/json"}
+                        }).then(function(progressCircleResponse){
+                            if(progressCircleResponse.ok){
+                                progressCircleResponse.json().then(function(progressCircleValue) {
+                                    debugger;
+                                    //console.log(progressCircleValue.value);
+                                    $('.circle').circleProgress({ 
+                                        animationStartValue: $('.circle').circleProgress('value'),
+                                        value: parseFloat(progressCircleValue.value) 
+                                    });
+                                    if(parseInt(progressCircleValue.value) != 1){
+                                        refreshProgress();
+                                    }
+                                });
+                            }
+                        });
+                    },100);
+                }
+
                 $('#btn-compile').click(function (){
-                    $('#full-bg').show();
+                    //$('#full-bg').show();
+                    $('#loader').show();
+                    currentProgressValue = 0;
+                    $('.circle').circleProgress({value: 0});
                     json = '';
                     $('input[type="checkbox"]:checked').not('.checkbox-switch').not('#checkAll').each(function(index, value){
                         comma = index != $('input[type="checkbox"]:checked').not('.checkbox-switch').not('#checkAll').length -1 ? ',' : '';
                         json += ' "'+index+'": "'+$(this).val().split('\\').join('\\\\')+'" '+comma;
                     });
                     json = '{"strJson": {'+json+'}, "needtoclear": '+$('#btn-clear input[type="checkbox"]').is(':checked')+'}';
+                    
+                    refreshProgress();
+
                     fetch('/index/clicked', {
                         method: 'POST',
                         headers: {"Content-Type": "application/json"},
                         body: json
                       })
                     .then(function(response) {
-                        $('#full-bg').hide();
+                        //$('#full-bg').hide();
                         if(response.ok) {        
                             response.json().then(function(data) {
                                 if(data.text.length > 0) {
@@ -194,6 +244,8 @@
                                               buttons: {
                                                   cancel: "Fechar"
                                                 }
+                                            }).then((value) => {
+                                                $('#loader').hide();
                                             });
                                             str = $('.popup-trace .swal-text').text();
                                             traceText = str.split('|redcolor|').join('<span style="color: #f00">');
@@ -210,6 +262,11 @@
                                                 icon: "/images/sad-face.svg",
                                                 className: "sad-face",
                                                 text: "Mas lembre-se de que os erros não foram corrigidos!",
+                                                buttons: {
+                                                  cancel: "Ok"
+                                                }
+                                            }).then((value) => {
+                                                $('#loader').hide();
                                             });
                                         }
                                     });
@@ -219,6 +276,8 @@
                                         text: "Todos os arquivos foram compilados sem erros!",
                                         icon: "success",
                                         button: "Ok",
+                                    }).then((value) => {
+                                        $('#loader').hide();
                                     });
                                 }
                             });
