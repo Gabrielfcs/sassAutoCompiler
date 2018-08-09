@@ -73,7 +73,7 @@ app.post('/index/clicked', (req, res) => {
             consoleRequest.then((cResponse) => {
                 if(cResponse.currentIndex < global.foldersArray.length -1 ){
                     global.progressCircleValue = (((100/(global.foldersArray.length))*(cResponse.currentIndex+1)))/100;
-                    console.log(global.progressCircleValue);
+                    // console.log(global.progressCircleValue);
                     compile(cResponse.currentIndex + 1);
                 } else {
                     fs.writeFile('./logs/error-log'+global.formatedDate+'.txt', cResponse.error, {flag: "w"}, function (err) {
