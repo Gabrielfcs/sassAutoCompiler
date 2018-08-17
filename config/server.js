@@ -37,12 +37,11 @@ app.post('/index/clicked', (req, res) => {
     var bodyRequest = req.body;
     var json = bodyRequest.strJson;
     var needToClear = bodyRequest.needtoclear;
-
-    global.strError = '';
+    
     var date = new Date();
     
     var current_day = date.getDate();
-    var current_month = date.getMonth();
+    var current_month = date.getMonth()+1;
     var current_year = date.getFullYear();
     
     var current_hour = date.getHours();
@@ -51,47 +50,55 @@ app.post('/index/clicked', (req, res) => {
     global.formatedDate = "("+current_day+"-"+current_month+"-"+current_year+" "+current_hour+"-"+current_minute+"-"+current_second+")";
 
     var str = '';
-    for(i in json){
-        if(typeof json[i] == "object"){
-            newArray = json[i];
-            for(j in newArray){
-                str += str.length > 0 ? ','+newArray[j] : newArray[j];
-            }
-        } else {
-            str += str.length > 0 ? ','+json[i] : json[i];
-        }
-    }
-    
-    global.foldersArray = str.split(',');
-    compilation = new Promise((compilationResolve, compilationReject) => { 
-        compilation =  compile(0); 
-        function compile(indexOfExecution) {
-            element = global.foldersArray[indexOfExecution];
-            index = indexOfExecution;
-            compassClean = needToClear ? 'compass clean &&' : '';
-            consoleRequest = cCommandInstance.execCommand('(pushd '+element+') && '+compassClean+' compass compile && exit : echo executed!', index, element);
-            consoleRequest.then((cResponse) => {
-                if(cResponse.currentIndex < global.foldersArray.length -1 ){
-                    global.progressCircleValue = (((100/(global.foldersArray.length))*(cResponse.currentIndex+1)))/100;
-                    // console.log(global.progressCircleValue);
-                    compile(cResponse.currentIndex + 1);
-                } else {
-                    fs.writeFile('./logs/error-log'+global.formatedDate+'.txt', cResponse.error, {flag: "w"}, function (err) {
-                        if (err){
-                            console.log(err);
-                        }
-                        // console.log("saved!");
-                    });
-                    compilationResolve(cResponse.error);
+    array = new Promise((arrayResolve, arrayReject) => { 
+        for(i in json){
+            if(typeof json[i] == "object"){
+                newArray = json[i];
+                for(j in newArray){
+                    str += str.length > 0 ? ','+newArray[j] : newArray[j];
                 }
-            });
+            } else {
+                str += str.length > 0 ? ','+json[i] : json[i];
+            }
         }
-    });
-    compilation.then((compilationResponse) =>{
-        res.status(200);
-        res.end(JSON.stringify({
-            text: compilationResponse
-        }));
+
+        global.foldersArray = str.split(',');
+        arrayResolve(global.foldersArray);
+    }).then((arrayResolve) => {
+        compilation = new Promise((compilationResolve, compilationReject) => { 
+            compilation =  compile(0); 
+            function compile(indexOfExecution) {
+                element = arrayResolve[indexOfExecution];
+                index = indexOfExecution;
+                compassClean = needToClear ? 'compass clean &&' : '';
+                cCommandInstance.execCommand('(pushd '+element+') && '+compassClean+' compass compile && exit : echo executed!', index, element).then((cResponse) => {
+                    if(cResponse.currentIndex < global.foldersArray.length-1) {
+                        global.progressCircleValue = (((100/(global.foldersArray.length))*(cResponse.currentIndex+1)))/100;
+                        // console.log(global.progressCircleValue);
+                        compile(cResponse.currentIndex + 1);
+                    } else {
+                        // console.log(cResponse);
+                        global.progressCircleValue = (((100/(global.foldersArray.length))*(cResponse.currentIndex+1)))/100;
+                        compilationResolve(cResponse.output);
+                    }
+                });
+            }
+        }).then((compilationResponse) => {
+            // console.log(compilationResponse);
+            //save a log file
+            fs.writeFile('./logs/error-log'+global.formatedDate+'.txt', compilationResponse, {flag: "w"}, function (err) {
+                if (err){
+                    console.log(err);
+                }
+                // console.log("saved!");
+            });
+    
+            //send to EJS file
+            res.status(200);
+            res.end(JSON.stringify({
+                text: compilationResponse
+            }));
+        });
     });
 });
 

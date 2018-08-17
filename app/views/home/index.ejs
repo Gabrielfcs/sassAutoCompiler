@@ -183,7 +183,6 @@
                         }).then(function(progressCircleResponse){
                             if(progressCircleResponse.ok){
                                 progressCircleResponse.json().then(function(progressCircleValue) {
-                                    debugger;
                                     //console.log(progressCircleValue.value);
                                     $('.circle').circleProgress({ 
                                         animationStartValue: $('.circle').circleProgress('value'),
@@ -211,15 +210,14 @@
                     json = '{"strJson": {'+json+'}, "needtoclear": '+$('#btn-clear input[type="checkbox"]').is(':checked')+'}';
                     
                     refreshProgress();
-
                     fetch('/index/clicked', {
                         method: 'POST',
                         headers: {"Content-Type": "application/json"},
                         body: json
-                      })
+                    })
                     .then(function(response) {
                         //$('#full-bg').hide();
-                        if(response.ok) {        
+                        if(response.ok) {
                             response.json().then(function(data) {
                                 if(data.text.length > 0) {
                                     swal({
@@ -235,39 +233,82 @@
                                         },
                                     }).then((value) => {
                                         switch (value) {                         
-                                          case "trace":
-                                            swal({
-                                              title: "Log de erros: ",
-                                              text: data.text,
-                                              icon: "warning",
-                                              className: "popup-trace",
-                                              buttons: {
-                                                  cancel: "Fechar"
-                                                }
-                                            }).then((value) => {
-                                                $('#loader').hide();
-                                            });
-                                            str = $('.popup-trace .swal-text').text();
-                                            traceText = str.split('|redcolor|').join('<span style="color: #f00">');
-                                            traceText = traceText.split('|/redcolor|').join('</span>');
-                                            traceText = traceText.split('|purplecolor|').join('<span style="font-weight: bold; color: #36304a">');
-                                            traceText = traceText.split('|/purplecolor|').join('</span>');
-                                            traceText = $.parseHTML(traceText);
-                                            $('.popup-trace .swal-text').html(traceText);
-                                            break;
-                                       
-                                          default:
-                                            swal({
-                                                title: "Okay!",
-                                                icon: "/images/sad-face.svg",
-                                                className: "sad-face",
-                                                text: "Mas lembre-se de que os erros não foram corrigidos!",
-                                                buttons: {
-                                                  cancel: "Ok"
-                                                }
-                                            }).then((value) => {
-                                                $('#loader').hide();
-                                            });
+                                            case "trace":
+                                                swal({
+                                                    title: "Log de erros: ",
+                                                    text: data.text,
+                                                    icon: "warning",
+                                                    className: "popup-trace",
+                                                    buttons: {
+                                                        viewFullBtn: {
+                                                            text: "Aumentar tamanho",
+                                                            value: "viewFull",
+                                                            closeModal: false
+                                                        },
+                                                        cancel: "Fechar"
+                                                    }
+                                                }).then((value) => {
+                                                    switch(value){
+                                                        case 'viewFull':
+                                                            $('#loader').hide();
+                                                            $('.popup-trace .swal-button').removeClass('swal-button--loading');
+                                                            $('.popup-trace .swal-button--loading~.swal-button__loader').hide();
+                                                            $('.popup-trace .swal-button--viewFullBtn').html('Abrir em nova guia');
+                                                            $('.popup-trace').css({
+                                                                "width": "100%",
+                                                                "height": "90%"
+                                                            });
+                                                            $('.popup-trace .swal-text').css({
+                                                                "max-height": "50%"
+                                                            });
+                                                            $('.popup-trace .swal-button--viewFullBtn').click(function(){
+                                                                $('.popup-trace .swal-button').removeClass('swal-button--loading');
+                                                                $('.popup-trace .swal-button--loading~.swal-button__loader').hide();
+                                                                $('.popup-trace .swal-button--viewFullBtn').html('Abrir em nova guia');
+                                                                var w = window.open();
+                                                                traceText = data.text.split('|getParentDiv|').join('<div style="margin:10px 0;">');
+                                                                traceText = traceText.split('|/getParentDiv|').join('</div>'); 
+                                                                traceText = traceText.split('|getDiv|').join('<div>');
+                                                                traceText = traceText.split('|/getDiv|').join('</div>'); 
+                                                                traceText = traceText.split('|redcolor|').join('<span style="color: #f00">');
+                                                                traceText = traceText.split('|/redcolor|').join('</span>');
+                                                                traceText = traceText.split('|purplecolor|').join('<span style="font-weight: bold; color: #36304a">');
+                                                                traceText = traceText.split('|/purplecolor|').join('</span>');
+                                                                w.document.write(traceText);
+                                                                w.document.close();
+                                                            });
+                                                            break;
+                                                        case 'cancel':
+                                                            $('#loader').hide();
+                                                            break;
+                                                        default:
+                                                            break;
+                                                    }
+                                                });
+                                                str = $('.popup-trace .swal-text').text();
+                                                traceText = str.split('|getParentDiv|').join('<div style="margin:10px 0;">');
+                                                traceText = traceText.split('|/getParentDiv|').join('</div>'); 
+                                                traceText = traceText.split('|getDiv|').join('<div>');
+                                                traceText = traceText.split('|/getDiv|').join('</div>'); 
+                                                traceText = traceText.split('|redcolor|').join('<span style="color: #f00">');
+                                                traceText = traceText.split('|/redcolor|').join('</span>');
+                                                traceText = traceText.split('|purplecolor|').join('<span style="font-weight: bold; color: #36304a">');
+                                                traceText = traceText.split('|/purplecolor|').join('</span>');
+                                                traceText = $.parseHTML(traceText);
+                                                $('.popup-trace .swal-text').html(traceText);
+                                                break;
+                                            default:
+                                                swal({
+                                                    title: "Okay!",
+                                                    icon: "/images/sad-face.svg",
+                                                    className: "sad-face",
+                                                    text: "Mas lembre-se de que os erros não foram corrigidos!",
+                                                    buttons: {
+                                                    cancel: "Ok"
+                                                    }
+                                                }).then((value) => {
+                                                    $('#loader').hide();
+                                                });
                                         }
                                     });
                                 } else {
@@ -281,7 +322,6 @@
                                     });
                                 }
                             });
-
                             return;
                         } else {
                             //swal("Alerta!", "Foram encontrados os erros a seguir:"+error, "warning");

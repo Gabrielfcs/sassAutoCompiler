@@ -284,3 +284,6 @@ table {
       text-align: center;
       line-height: 38px;
       font-size: 29px; }
+
+div.swal-button__loader {
+  width: 50px; }
