@@ -84,20 +84,19 @@ app.post('/index/clicked', (req, res) => {
                 });
             }
         }).then((compilationResponse) => {
-            // console.log(compilationResponse);
+            console.log(compilationResponse);
             //save a log file
             fs.writeFile('./logs/error-log'+global.formatedDate+'.txt', compilationResponse, {flag: "w"}, function (err) {
                 if (err){
                     console.log(err);
                 }
                 // console.log("saved!");
+                //send to EJS file
+                res.status(200);
+                res.end({
+                    text: compilationResponse
+                });
             });
-    
-            //send to EJS file
-            res.status(200);
-            res.end(JSON.stringify({
-                text: compilationResponse
-            }));
         });
     });
 });

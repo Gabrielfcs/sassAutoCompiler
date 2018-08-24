@@ -22,6 +22,8 @@ var folderName =  [];
 
 global.strConsoleTable;
 global.strConsoleTable = '';
+global.myArr;
+global.myArr = [];
 
 
 module.exports = function(app){
@@ -38,13 +40,28 @@ module.exports = function(app){
                 
                 //iterates all folders initiated by "web"
                 fs.readdir(fullpath, function( err, webFiles ) {
+                    if(err){
+                        console.log(err);
+                        res.status(500);
+                        res.end('Try Again later!');
+                        return;
+                    }
                     aWebFolders = [];
                     folderPath = [];
                     folderName = [];
                     webFiles.forEach( function(webfolder, webFolderIndex) {
+                        var fullpathinnerfiles = path.join(fullpath, webfolder );
+                        fs.readdir( fullpathinnerfiles, function( err, innerFiles ) {
+                            if(typeof innerFiles == 'object'){
+                                if(innerFiles.indexOf('config.rb') > -1){
+                                    global.myArr.push(webfolder);
+                                }
+                            }
+                        });
                         //gets the entire path of web folder
                         var fullpathweb = path.join( fullpath, webfolder );         
-                        if(webfolder.indexOf('web-') > -1){
+                        if(webfolder.indexOf('web-') > -1 && global.myArr.indexOf(`${webfolder}`) > -1){
+                            // console.log(global.myArr.indexOf(`${webfolder}`) > -1);
                             if(fullpathweb != null){
                                 // console.log(index+'-t: '+fullpathweb);
                                 folderPath.push(fullpathweb);
@@ -53,6 +70,7 @@ module.exports = function(app){
                                 folderName.push(webfolder);
                             }
                         }
+
                     });
                     arrayFilter.clean(folderPath,undefined);
                     arrayFilter.clean(folderName,undefined);
@@ -95,16 +113,18 @@ module.exports = function(app){
 
         //Creates the lines of the table
         trlines = '';
-        if (webTable.length > 0) {
+        if (webTable && webTable.length > 0) {
             for (let i = 0; i < webTable.length; i++) {
-                if(webTable[i].arquivo != 'sprint' && webTable[i].arquivo != 'trunk'){
-                    trlines +=  buildWebTable.getTr(
-                                    buildWebTable.getTd(`<input type="checkbox" name="${i}" value="${webTable[i].webfolderpath}">`, `class="col-1"`)+
-                                    buildWebTable.getTd(`${webTable[i].indice}`, `class="col-1"`)+
-                                    buildWebTable.getTd(`${webTable[i].arquivo}`, `class="col-3"`)+
-                                    buildWebTable.getTd(`${webTable[i].diretorio}`, `class="col-3"`)+
-                                    buildWebTable.getTd(`${webTable[i].webfoldername}`, `class="col-3"`)
-                                );            
+                if(webTable[i] != 'undefined' && webTable[i] != null){
+                    if(webTable[i].arquivo != 'sprint' && webTable[i].arquivo != 'trunk'){
+                        trlines +=  buildWebTable.getTr(
+                                        buildWebTable.getTd(`<input type="checkbox" name="${i}" value="${webTable[i].webfolderpath}">`, `class="col-1"`)+
+                                        buildWebTable.getTd(`${webTable[i].indice}`, `class="col-1"`)+
+                                        buildWebTable.getTd(`${webTable[i].arquivo}`, `class="col-3"`)+
+                                        buildWebTable.getTd(`${webTable[i].diretorio}`, `class="col-3"`)+
+                                        buildWebTable.getTd(`${webTable[i].webfoldername}`, `class="col-3"`)
+                                    );            
+                    }
                 }
             }
         }

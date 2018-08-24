@@ -219,7 +219,15 @@
                         //$('#full-bg').hide();
                         if(response.ok) {
                             response.json().then(function(data) {
+                                //console.log(typeof data.text);
                                 if(data.text.length > 0) {
+                                    $('.popup-trace').css({
+                                        "width": "",
+                                        "height": ""
+                                    });
+                                    $('.popup-trace .swal-text').css({
+                                        "max-height": ""
+                                    });
                                     swal({
                                         title: "Alerta!",
                                         text: "Foram encontrados alguns erros!",
