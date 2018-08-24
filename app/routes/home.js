@@ -48,9 +48,9 @@ module.exports = function(app){
                 fs.readdir(fullpath, function( err, webFiles ) {
                     if(err){
                         console.log(err);
-                        res.status(500);
+                        res.status(400);
                         res.end('Try Again later!');
-                        return;
+                        // return;
                     }
                     aWebFolders = [];
                     folderPath = [];
