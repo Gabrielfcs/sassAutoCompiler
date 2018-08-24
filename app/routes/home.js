@@ -33,7 +33,13 @@ module.exports = function(app){
                 console.error( "Could not list the directory.", err );
                 process.exit( 1 );
             } 
+            if(files.indexOf('sprint') > -1){
+                files.splice(files.indexOf('sprint'),1);
+            }
             
+            if(files.indexOf('trunk') > -1){
+                files.splice(files.indexOf('trunk'),1);
+            }
             files.forEach( function(folder, index) {
                 //gets the entire path
                 var fullpath = path.join( directory, folder );
@@ -116,15 +122,13 @@ module.exports = function(app){
         if (webTable && webTable.length > 0) {
             for (let i = 0; i < webTable.length; i++) {
                 if(webTable[i] != 'undefined' && webTable[i] != null){
-                    if(webTable[i].arquivo != 'sprint' && webTable[i].arquivo != 'trunk'){
-                        trlines +=  buildWebTable.getTr(
-                                        buildWebTable.getTd(`<input type="checkbox" name="${i}" value="${webTable[i].webfolderpath}">`, `class="col-1"`)+
-                                        buildWebTable.getTd(`${webTable[i].indice}`, `class="col-1"`)+
-                                        buildWebTable.getTd(`${webTable[i].arquivo}`, `class="col-3"`)+
-                                        buildWebTable.getTd(`${webTable[i].diretorio}`, `class="col-3"`)+
-                                        buildWebTable.getTd(`${webTable[i].webfoldername}`, `class="col-3"`)
-                                    );            
-                    }
+                    trlines +=  buildWebTable.getTr(
+                                    buildWebTable.getTd(`<input type="checkbox" name="${i}" value="${webTable[i].webfolderpath}">`, `class="col-1"`)+
+                                    buildWebTable.getTd(`${webTable[i].indice}`, `class="col-1"`)+
+                                    buildWebTable.getTd(`${webTable[i].arquivo}`, `class="col-3"`)+
+                                    buildWebTable.getTd(`${webTable[i].diretorio}`, `class="col-3"`)+
+                                    buildWebTable.getTd(`${webTable[i].webfoldername}`, `class="col-3"`)
+                                );            
                 }
             }
         }
