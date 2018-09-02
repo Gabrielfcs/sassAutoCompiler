@@ -34,7 +34,7 @@ Para fazer o "[Watch](#watch)" do compilador:
 > nodemon compiler 
 ```
 
-## BOM TRABALHO!! O Sass Auto Compiler ja esta funcionando!
+### BOM TRABALHO!! O Sass Auto Compiler ja esta funcionando!
 
 ## Dicionário
 #### Watch: 
